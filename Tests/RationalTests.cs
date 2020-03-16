@@ -22,12 +22,69 @@ namespace Tests
             int aDenominator = 4;
             int bNumerator = 1;
             int bDenominator = 4;
-
             int expectedNumerator = 1;
             int expectedDenominator = 2;
+
             Rational<int> a = new Rational<int>(aNumerator, aDenominator);
             Rational<int> b = new Rational<int>(bNumerator, bDenominator);
             Rational<int> result = a + b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Add002()
+        {
+            int aNumerator = 1;
+            int aDenominator = 4;
+            int bNumerator = 1;
+            int bDenominator = 2;
+            int expectedNumerator = 3;
+            int expectedDenominator = 4;
+
+            Rational<int> a = new Rational<int>(aNumerator, aDenominator);
+            Rational<int> b = new Rational<int>(bNumerator, bDenominator);
+            Rational<int> result = a + b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Divide001()
+        {
+            int aNumerator = 1;
+            int aDenominator = 4;
+            int bNumerator = 1;
+            int bDenominator = 4;
+            int expectedNumerator = 1;
+            int expectedDenominator = 1;
+
+            Rational<int> a = new Rational<int>(aNumerator, aDenominator);
+            Rational<int> b = new Rational<int>(bNumerator, bDenominator);
+            Rational<int> result = a / b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Divide002()
+        {
+            int aNumerator = 1;
+            int aDenominator = 4;
+            int bNumerator = 1;
+            int bDenominator = 2;
+            int expectedNumerator = 1;
+            int expectedDenominator = 2;
+
+            Rational<int> a = new Rational<int>(aNumerator, aDenominator);
+            Rational<int> b = new Rational<int>(bNumerator, bDenominator);
+            Rational<int> result = a / b;
 
             Assert.IsNotNull(result);
             Assert.AreEqual(expectedNumerator, result.Numerator);
@@ -41,7 +98,6 @@ namespace Tests
             int factorCount = 6;
 
             Assert.AreEqual(factors.Count, factorCount);
-
             Assert.AreEqual(factors[0], 1);
             Assert.AreEqual(factors[1], 2);
             Assert.AreEqual(factors[2], 3);
@@ -57,7 +113,6 @@ namespace Tests
             int factorCount = 8;
 
             Assert.AreEqual(factors.Count, factorCount);
-
             Assert.AreEqual(factors[0], 1);
             Assert.AreEqual(factors[1], 2);
             Assert.AreEqual(factors[2], 3);
@@ -99,6 +154,82 @@ namespace Tests
             int highestCommonFactor = Rational<int>.GetHighestCommonFactor(a, b);
 
             Assert.AreEqual(expectedHighestCommonFactor, highestCommonFactor);
+        }
+
+        [TestMethod]
+        public void Multiply001()
+        {
+            int aNumerator = 1;
+            int aDenominator = 4;
+            int bNumerator = 1;
+            int bDenominator = 4;
+            int expectedNumerator = 1;
+            int expectedDenominator = 16;
+
+            Rational<int> a = new Rational<int>(aNumerator, aDenominator);
+            Rational<int> b = new Rational<int>(bNumerator, bDenominator);
+            Rational<int> result = a * b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Multiply002()
+        {
+            int aNumerator = 1;
+            int aDenominator = 4;
+            int bNumerator = 1;
+            int bDenominator = 2;
+            int expectedNumerator = 1;
+            int expectedDenominator = 8;
+
+            Rational<int> a = new Rational<int>(aNumerator, aDenominator);
+            Rational<int> b = new Rational<int>(bNumerator, bDenominator);
+            Rational<int> result = a * b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Subtract001()
+        {
+            int aNumerator = 1;
+            int aDenominator = 3;
+            int bNumerator = 1;
+            int bDenominator = 4;
+            int expectedNumerator = 1;
+            int expectedDenominator = 12;
+
+            Rational<int> a = new Rational<int>(aNumerator, aDenominator);
+            Rational<int> b = new Rational<int>(bNumerator, bDenominator);
+            Rational<int> result = a - b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Subtract002()
+        {
+            int aNumerator = 63;
+            int aDenominator = 4;
+            int bNumerator = 53;
+            int bDenominator = 6;
+            int expectedNumerator = 83;
+            int expectedDenominator = 12;
+
+            Rational<int> a = new Rational<int>(aNumerator, aDenominator);
+            Rational<int> b = new Rational<int>(bNumerator, bDenominator);
+            Rational<int> result = a - b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
         }
     }
 }

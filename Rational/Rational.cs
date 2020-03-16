@@ -84,6 +84,16 @@ namespace Numerics
             throw new NotImplementedException();
         }
 
+        private static Rational<int> Divide(Rational<int> a, Rational<int> b)
+        {
+            return Simplify(Multiply(a, new Rational<int>(b.Denominator, b.Numerator)));
+        }
+
+        private static Rational<long> Divide(Rational<long> a, Rational<long> b)
+        {
+            return Simplify(Multiply(a, new Rational<long>(b.Denominator, b.Numerator)));
+        }
+
         public override bool Equals(object value)
         {
             bool equals = false;
@@ -177,8 +187,8 @@ namespace Numerics
 
         private static Rational<int> Multiply(Rational<int> a, Rational<int> b)
         {
-            int numerator = (a.Numerator * b.Denominator);
-            int denominator = (a.Denominator * b.Numerator);
+            int numerator = (a.Numerator * b.Numerator);
+            int denominator = (a.Denominator * b.Denominator);
 
             return new Rational<int>(numerator, denominator);
         }
@@ -231,6 +241,22 @@ namespace Numerics
             long denominator = rational.Denominator;
 
             return new Rational<long>(numerator, denominator);
+        }
+
+        private static Rational<int> Subtract(Rational<int> a, Rational<int> b)
+        {
+            int numerator = ((a.Numerator * b.Denominator) - (b.Numerator * a.Denominator));
+            int denominator = (a.Denominator * b.Denominator);
+
+            return Simplify(new Rational<int>(numerator, denominator));
+        }
+
+        private static Rational<long> Subtract(Rational<long> a, Rational<long> b)
+        {
+            long numerator = ((a.Numerator * b.Denominator) - (b.Numerator * a.Denominator));
+            long denominator = (a.Denominator * b.Denominator);
+
+            return Simplify(new Rational<long>(numerator, denominator));
         }
 
         public override string ToString()
@@ -297,54 +323,19 @@ namespace Numerics
 
         public static Rational<T> operator /(Rational<T> left, Rational<T> right)
         {
-            T numerator = default;
-            T denominator = default;
-
-            if ((typeof(decimal).IsAssignableFrom(typeof(T))) == true)
-            {
-                decimal aNumerator = Convert.ToDecimal(left.Numerator);
-                decimal aDenominator = Convert.ToDecimal(left.Denominator);
-                decimal bNumerator = Convert.ToDecimal(right.Numerator);
-                decimal bDenominator = Convert.ToDecimal(right.Denominator);
-
-                numerator = (T)(object)(aNumerator * bDenominator);
-                denominator = (T)(object)(aDenominator * bNumerator);
-            }
-
-            if ((typeof(double).IsAssignableFrom(typeof(T))) == true)
-            {
-                double aNumerator = Convert.ToDouble(left.Numerator);
-                double aDenominator = Convert.ToDouble(left.Denominator);
-                double bNumerator = Convert.ToDouble(right.Numerator);
-                double bDenominator = Convert.ToDouble(right.Denominator);
-
-                numerator = (T)(object)(aNumerator * bDenominator);
-                denominator = (T)(object)(aDenominator * bNumerator);
-            }
+            Rational<T> rational = default;
 
             if ((typeof(int).IsAssignableFrom(typeof(T))) == true)
             {
-                int aNumerator = Convert.ToInt32(left.Numerator);
-                int aDenominator = Convert.ToInt32(left.Denominator);
-                int bNumerator = Convert.ToInt32(right.Numerator);
-                int bDenominator = Convert.ToInt32(right.Denominator);
-
-                numerator = (T)(object)(aNumerator * bDenominator);
-                denominator = (T)(object)(aDenominator * bNumerator);
+                rational = Divide((left as Rational<int>), (right as Rational<int>)) as Rational<T>;
             }
 
             if ((typeof(long).IsAssignableFrom(typeof(T))) == true)
             {
-                long aNumerator = Convert.ToInt64(left.Numerator);
-                long aDenominator = Convert.ToInt64(left.Denominator);
-                long bNumerator = Convert.ToInt64(right.Numerator);
-                long bDenominator = Convert.ToInt64(right.Denominator);
-
-                numerator = (T)(object)(aNumerator * bDenominator);
-                denominator = (T)(object)(aDenominator * bNumerator);
+                rational = Divide((left as Rational<long>), (right as Rational<long>)) as Rational<T>;
             }
 
-            return new Rational<T>(numerator, denominator);
+            return rational;
         }
 
         public static Rational<T> operator %(Rational<T> left, Rational<T> right)
@@ -371,7 +362,19 @@ namespace Numerics
 
         public static Rational<T> operator -(Rational<T> left, Rational<T> right)
         {
-            throw new NotImplementedException();
+            Rational<T> rational = default;
+
+            if ((typeof(int).IsAssignableFrom(typeof(T))) == true)
+            {
+                rational = Subtract((left as Rational<int>), (right as Rational<int>)) as Rational<T>;
+            }
+
+            if ((typeof(long).IsAssignableFrom(typeof(T))) == true)
+            {
+                rational = Subtract((left as Rational<long>), (right as Rational<long>)) as Rational<T>;
+            }
+
+            return rational;
         }
     }
 }
