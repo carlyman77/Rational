@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Numerics;
@@ -16,7 +16,45 @@ namespace Tests
     public class RationalTests
     {
         [TestMethod]
-        public void Add001()
+        public void Add_BigInteger_001()
+        {
+            BigInteger aNumerator = 1;
+            BigInteger aDenominator = 4;
+            BigInteger bNumerator = 1;
+            BigInteger bDenominator = 4;
+            BigInteger expectedNumerator = 1;
+            BigInteger expectedDenominator = 2;
+
+            Rational<BigInteger> a = new Rational<BigInteger>(aNumerator, aDenominator);
+            Rational<BigInteger> b = new Rational<BigInteger>(bNumerator, bDenominator);
+            Rational<BigInteger> result = a + b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Add_BigInteger_002()
+        {
+            BigInteger aNumerator = 1;
+            BigInteger aDenominator = 4;
+            BigInteger bNumerator = 1;
+            BigInteger bDenominator = 2;
+            BigInteger expectedNumerator = 3;
+            BigInteger expectedDenominator = 4;
+
+            Rational<BigInteger> a = new Rational<BigInteger>(aNumerator, aDenominator);
+            Rational<BigInteger> b = new Rational<BigInteger>(bNumerator, bDenominator);
+            Rational<BigInteger> result = a + b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Add_Int32_001()
         {
             int aNumerator = 1;
             int aDenominator = 4;
@@ -35,7 +73,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Add002()
+        public void Add_Int32_002()
         {
             int aNumerator = 1;
             int aDenominator = 4;
@@ -54,7 +92,64 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Divide001()
+        public void Add_Int64_001()
+        {
+            long aNumerator = 1;
+            long aDenominator = 4;
+            long bNumerator = 1;
+            long bDenominator = 4;
+            long expectedNumerator = 1;
+            long expectedDenominator = 2;
+
+            Rational<long> a = new Rational<long>(aNumerator, aDenominator);
+            Rational<long> b = new Rational<long>(bNumerator, bDenominator);
+            Rational<long> result = a + b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void AddInt64_002()
+        {
+            long aNumerator = 1;
+            long aDenominator = 4;
+            long bNumerator = 1;
+            long bDenominator = 2;
+            long expectedNumerator = 3;
+            long expectedDenominator = 4;
+
+            Rational<long> a = new Rational<long>(aNumerator, aDenominator);
+            Rational<long> b = new Rational<long>(bNumerator, bDenominator);
+            Rational<long> result = a + b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Divide_BigInteger_001()
+        {
+            BigInteger aNumerator = 1;
+            BigInteger aDenominator = 4;
+            BigInteger bNumerator = 1;
+            BigInteger bDenominator = 4;
+            BigInteger expectedNumerator = 1;
+            BigInteger expectedDenominator = 1;
+
+            Rational<BigInteger> a = new Rational<BigInteger>(aNumerator, aDenominator);
+            Rational<BigInteger> b = new Rational<BigInteger>(bNumerator, bDenominator);
+            Rational<BigInteger> result = a / b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Divide_Int32_001()
         {
             int aNumerator = 1;
             int aDenominator = 4;
@@ -73,7 +168,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Divide002()
+        public void Divide_Int64_001()
         {
             int aNumerator = 1;
             int aDenominator = 4;
@@ -92,42 +187,10 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Factors001()
-        {
-            List<int> factors = Rational<int>.GetFactors(12).ToList();
-            int factorCount = 6;
-
-            Assert.AreEqual(factors.Count, factorCount);
-            Assert.AreEqual(factors[0], 1);
-            Assert.AreEqual(factors[1], 2);
-            Assert.AreEqual(factors[2], 3);
-            Assert.AreEqual(factors[3], 4);
-            Assert.AreEqual(factors[4], 6);
-            Assert.AreEqual(factors[5], 12);
-        }
-
-        [TestMethod]
-        public void Factors002()
-        {
-            List<int> factors = Rational<int>.GetFactors(30).ToList();
-            int factorCount = 8;
-
-            Assert.AreEqual(factors.Count, factorCount);
-            Assert.AreEqual(factors[0], 1);
-            Assert.AreEqual(factors[1], 2);
-            Assert.AreEqual(factors[2], 3);
-            Assert.AreEqual(factors[3], 5);
-            Assert.AreEqual(factors[4], 6);
-            Assert.AreEqual(factors[5], 10);
-            Assert.AreEqual(factors[6], 15);
-            Assert.AreEqual(factors[7], 30);
-        }
-
-        [TestMethod]
         public void HighestCommonFactor001()
         {
-            List<int> a = Rational<int>.GetFactors(12).ToList();
-            List<int> b = Rational<int>.GetFactors(30).ToList();
+            int a = 12;
+            int b = 30;
             int expectedHighestCommonFactor = 6;
             int highestCommonFactor = Rational<int>.GetHighestCommonFactor(a, b);
 
@@ -137,8 +200,8 @@ namespace Tests
         [TestMethod]
         public void HighestCommonFactor002()
         {
-            List<int> a = Rational<int>.GetFactors(7).ToList();
-            List<int> b = Rational<int>.GetFactors(21).ToList();
+            int a = 7;
+            int b = 21;
             int expectedHighestCommonFactor = 7;
             int highestCommonFactor = Rational<int>.GetHighestCommonFactor(a, b);
 
@@ -148,8 +211,8 @@ namespace Tests
         [TestMethod]
         public void HighestCommonFactor003()
         {
-            List<int> a = Rational<int>.GetFactors(7).ToList();
-            List<int> b = Rational<int>.GetFactors(23).ToList();
+            int a = 7;
+            int b = 23;
             int expectedHighestCommonFactor = 1;
             int highestCommonFactor = Rational<int>.GetHighestCommonFactor(a, b);
 
@@ -157,7 +220,45 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Multiply001()
+        public void Multiply_BigInteger_001()
+        {
+            BigInteger aNumerator = 1;
+            BigInteger aDenominator = 4;
+            BigInteger bNumerator = 1;
+            BigInteger bDenominator = 4;
+            BigInteger expectedNumerator = 1;
+            BigInteger expectedDenominator = 16;
+
+            Rational<BigInteger> a = new Rational<BigInteger>(aNumerator, aDenominator);
+            Rational<BigInteger> b = new Rational<BigInteger>(bNumerator, bDenominator);
+            Rational<BigInteger> result = a * b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Multiply_BigInteger_002()
+        {
+            BigInteger aNumerator = 1;
+            BigInteger aDenominator = 4;
+            BigInteger bNumerator = 1;
+            BigInteger bDenominator = 2;
+            BigInteger expectedNumerator = 1;
+            BigInteger expectedDenominator = 8;
+
+            Rational<BigInteger> a = new Rational<BigInteger>(aNumerator, aDenominator);
+            Rational<BigInteger> b = new Rational<BigInteger>(bNumerator, bDenominator);
+            Rational<BigInteger> result = a * b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Multiply_Int32_001()
         {
             int aNumerator = 1;
             int aDenominator = 4;
@@ -176,7 +277,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Multiply002()
+        public void Multiply_Int32_002()
         {
             int aNumerator = 1;
             int aDenominator = 4;
@@ -195,7 +296,83 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Subtract001()
+        public void Multiply_Int64_001()
+        {
+            long aNumerator = 1;
+            long aDenominator = 4;
+            long bNumerator = 1;
+            long bDenominator = 4;
+            long expectedNumerator = 1;
+            long expectedDenominator = 16;
+
+            Rational<long> a = new Rational<long>(aNumerator, aDenominator);
+            Rational<long> b = new Rational<long>(bNumerator, bDenominator);
+            Rational<long> result = a * b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Multiply_Int64_002()
+        {
+            long aNumerator = 1;
+            long aDenominator = 4;
+            long bNumerator = 1;
+            long bDenominator = 2;
+            long expectedNumerator = 1;
+            long expectedDenominator = 8;
+
+            Rational<long> a = new Rational<long>(aNumerator, aDenominator);
+            Rational<long> b = new Rational<long>(bNumerator, bDenominator);
+            Rational<long> result = a * b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Subtract_BigInteger_001()
+        {
+            BigInteger aNumerator = 1;
+            BigInteger aDenominator = 3;
+            BigInteger bNumerator = 1;
+            BigInteger bDenominator = 4;
+            BigInteger expectedNumerator = 1;
+            BigInteger expectedDenominator = 12;
+
+            Rational<BigInteger> a = new Rational<BigInteger>(aNumerator, aDenominator);
+            Rational<BigInteger> b = new Rational<BigInteger>(bNumerator, bDenominator);
+            Rational<BigInteger> result = a - b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Subtract_BigInteger_002()
+        {
+            BigInteger aNumerator = 63;
+            BigInteger aDenominator = 4;
+            BigInteger bNumerator = 53;
+            BigInteger bDenominator = 6;
+            BigInteger expectedNumerator = 83;
+            BigInteger expectedDenominator = 12;
+
+            Rational<BigInteger> a = new Rational<BigInteger>(aNumerator, aDenominator);
+            Rational<BigInteger> b = new Rational<BigInteger>(bNumerator, bDenominator);
+            Rational<BigInteger> result = a - b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Subtract_Int32_001()
         {
             int aNumerator = 1;
             int aDenominator = 3;
@@ -214,7 +391,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void Subtract002()
+        public void Subtract_Int32_002()
         {
             int aNumerator = 63;
             int aDenominator = 4;
@@ -226,6 +403,44 @@ namespace Tests
             Rational<int> a = new Rational<int>(aNumerator, aDenominator);
             Rational<int> b = new Rational<int>(bNumerator, bDenominator);
             Rational<int> result = a - b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Subtract_Int64_001()
+        {
+            long aNumerator = 1;
+            long aDenominator = 3;
+            long bNumerator = 1;
+            long bDenominator = 4;
+            long expectedNumerator = 1;
+            long expectedDenominator = 12;
+
+            Rational<long> a = new Rational<long>(aNumerator, aDenominator);
+            Rational<long> b = new Rational<long>(bNumerator, bDenominator);
+            Rational<long> result = a - b;
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedNumerator, result.Numerator);
+            Assert.AreEqual(expectedDenominator, result.Denominator);
+        }
+
+        [TestMethod]
+        public void Subtract_Int64_002()
+        {
+            long aNumerator = 63;
+            long aDenominator = 4;
+            long bNumerator = 53;
+            long bDenominator = 6;
+            long expectedNumerator = 83;
+            long expectedDenominator = 12;
+
+            Rational<long> a = new Rational<long>(aNumerator, aDenominator);
+            Rational<long> b = new Rational<long>(bNumerator, bDenominator);
+            Rational<long> result = a - b;
 
             Assert.IsNotNull(result);
             Assert.AreEqual(expectedNumerator, result.Numerator);

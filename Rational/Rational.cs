@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Numerics;
 
 using Maths = System.Math;
 
@@ -14,22 +15,13 @@ namespace Numerics
     public class Rational<T> where T : struct, IEquatable<T>, IComparable
     {
         public Rational(T numerator, T denominator)
-            : this (numerator, denominator, DefaultPrecision)
-        {
-        }
-
-        public Rational(T numerator, T denominator, int precision)
         {
             _numerator = numerator;
             _denominator = denominator;
-            _precision = precision;
         }
 
         private T _denominator;
         private T _numerator;
-        private readonly int _precision;
-
-        public const int DefaultPrecision = 50;
 
         public T Denominator
         {
@@ -55,12 +47,12 @@ namespace Numerics
             }
         }
 
-        public int Precision
+        private static Rational<BigInteger> Add(Rational<BigInteger> a, Rational<BigInteger> b)
         {
-            get
-            {
-                return _precision;
-            }
+            BigInteger numerator = (a.Numerator * b.Denominator) + (a.Denominator * b.Numerator);
+            BigInteger denominator = (a.Denominator * b.Denominator);
+
+            return Simplify(new Rational<BigInteger>(numerator, denominator));
         }
 
         private static Rational<int> Add(Rational<int> a, Rational<int> b)
@@ -82,6 +74,11 @@ namespace Numerics
         public int CompareTo(object value)
         {
             throw new NotImplementedException();
+        }
+
+        private static Rational<BigInteger> Divide(Rational<BigInteger> a, Rational<BigInteger> b)
+        {
+            return Simplify(Multiply(a, new Rational<BigInteger>(b.Denominator, b.Numerator)));
         }
 
         private static Rational<int> Divide(Rational<int> a, Rational<int> b)
@@ -135,54 +132,48 @@ namespace Numerics
             throw new NotImplementedException();
         }
 
-        public static IEnumerable<int> GetFactors(int value)
-        {
-            HashSet<int> factors = new HashSet<int>();
-
-            if (value > 0)
-            {
-                int root = (int)(Math.Sqrt(value));
-
-                for (int i = 1; i <= root; i++)
-                {
-                    if (value % i == 0)
-                    {
-                        int factor = (value / i);
-
-                        factors.Add(i);
-                        factors.Add(factor);
-                    }
-                }
-            }
-
-            return factors.Distinct().OrderBy(m => (m));
-        }
-
-        public static int GetHighestCommonFactor(IEnumerable<int> a, IEnumerable<int> b)
+        public static int GetHighestCommonFactor(int a, int b)
         {
             int highestCommonFactor = 0;
 
-            if ((a != null) && (b != null))
+            if (b == 0)
             {
-                List<int> aList = a.OrderBy(m => (m)).ToList();
-                List<int> bList = b.OrderBy(m => (m)).ToList();
+                highestCommonFactor = a;
+            }
+            else
+            {
+                int value = a % b;
 
-                bool done = false;
-
-                while (done == false)
-                {
-                    aList = aList.Where(m => (m <= (bList.Max()))).ToList();
-                    bList = bList.Where(m => (m <= (aList.Max()))).ToList();
-
-                    if (aList[aList.Count - 1] == bList[bList.Count - 1])
-                    {
-                        highestCommonFactor = aList[aList.Count - 1];
-                        done = true;
-                    }
-                }
+                highestCommonFactor = GetHighestCommonFactor(b, value);
             }
 
             return highestCommonFactor;
+        }
+
+        public static long GetHighestCommonFactor(long a, long b)
+        {
+            long highestCommonFactor = 0;
+
+            if (b == 0)
+            {
+                highestCommonFactor = a;
+            }
+            else
+            {
+                long value = a % b;
+
+                highestCommonFactor = GetHighestCommonFactor(b, value);
+            }
+
+            return highestCommonFactor;
+        }
+
+        private static Rational<BigInteger> Multiply(Rational<BigInteger> a, Rational<BigInteger> b)
+        {
+            BigInteger numerator = (a.Numerator * b.Numerator);
+            BigInteger denominator = (a.Denominator * b.Denominator);
+
+            return new Rational<BigInteger>(numerator, denominator);
         }
 
         private static Rational<int> Multiply(Rational<int> a, Rational<int> b)
@@ -195,8 +186,8 @@ namespace Numerics
 
         private static Rational<long> Multiply(Rational<long> a, Rational<long> b)
         {
-            long numerator = (a.Numerator * b.Denominator);
-            long denominator = (a.Denominator * b.Numerator);
+            long numerator = (a.Numerator * b.Numerator);
+            long denominator = (a.Denominator * b.Denominator);
 
             return new Rational<long>(numerator, denominator);
         }
@@ -223,11 +214,23 @@ namespace Numerics
             return simplify;
         }
 
+        public static Rational<BigInteger> Simplify(Rational<BigInteger> rational)
+        {
+            BigInteger numerator = rational.Numerator;
+            BigInteger denominator = rational.Denominator;
+            BigInteger factor = BigInteger.GreatestCommonDivisor(numerator, denominator);
+
+            numerator /= factor;
+            denominator /= factor;
+
+            return new Rational<BigInteger>(numerator, denominator);
+        }
+
         public static Rational<int> Simplify(Rational<int> rational)
         {
             int numerator = rational.Numerator;
             int denominator = rational.Denominator;
-            int factor = GetHighestCommonFactor(GetFactors(numerator), GetFactors(denominator));
+            int factor = GetHighestCommonFactor(numerator, denominator);
 
             numerator /= factor;
             denominator /= factor;
@@ -239,8 +242,20 @@ namespace Numerics
         {
             long numerator = rational.Numerator;
             long denominator = rational.Denominator;
+            long factor = GetHighestCommonFactor(numerator, denominator);
+
+            numerator /= factor;
+            denominator /= factor;
 
             return new Rational<long>(numerator, denominator);
+        }
+
+        private static Rational<BigInteger> Subtract(Rational<BigInteger> a, Rational<BigInteger> b)
+        {
+            BigInteger numerator = ((a.Numerator * b.Denominator) - (b.Numerator * a.Denominator));
+            BigInteger denominator = (a.Denominator * b.Denominator);
+
+            return Simplify(new Rational<BigInteger>(numerator, denominator));
         }
 
         private static Rational<int> Subtract(Rational<int> a, Rational<int> b)
@@ -308,6 +323,11 @@ namespace Numerics
         {
             Rational<T> rational = default;
 
+            if ((typeof(BigInteger).IsAssignableFrom(typeof(T))) == true)
+            {
+                rational = Multiply((left as Rational<BigInteger>), (right as Rational<BigInteger>)) as Rational<T>;
+            }
+
             if ((typeof(int).IsAssignableFrom(typeof(T))) == true)
             {
                 rational = Multiply((left as Rational<int>), (right as Rational<int>)) as Rational<T>;
@@ -324,6 +344,11 @@ namespace Numerics
         public static Rational<T> operator /(Rational<T> left, Rational<T> right)
         {
             Rational<T> rational = default;
+
+            if ((typeof(BigInteger).IsAssignableFrom(typeof(T))) == true)
+            {
+                rational = Divide((left as Rational<BigInteger>), (right as Rational<BigInteger>)) as Rational<T>;
+            }
 
             if ((typeof(int).IsAssignableFrom(typeof(T))) == true)
             {
@@ -347,6 +372,11 @@ namespace Numerics
         {
             Rational<T> rational = default;
 
+            if ((typeof(BigInteger).IsAssignableFrom(typeof(T))) == true)
+            {
+                rational = Add((left as Rational<BigInteger>), (right as Rational<BigInteger>)) as Rational<T>;
+            }
+
             if ((typeof(int).IsAssignableFrom(typeof(T))) == true)
             {
                 rational = Add((left as Rational<int>), (right as Rational<int>)) as Rational<T>;
@@ -363,6 +393,11 @@ namespace Numerics
         public static Rational<T> operator -(Rational<T> left, Rational<T> right)
         {
             Rational<T> rational = default;
+
+            if ((typeof(BigInteger).IsAssignableFrom(typeof(T))) == true)
+            {
+                rational = Subtract((left as Rational<BigInteger>), (right as Rational<BigInteger>)) as Rational<T>;
+            }
 
             if ((typeof(int).IsAssignableFrom(typeof(T))) == true)
             {
