@@ -20,18 +20,14 @@ namespace Numerics
             _denominator = denominator;
         }
 
-        private T _denominator;
-        private T _numerator;
+        private readonly T _denominator;
+        private readonly T _numerator;
 
         public T Denominator
         {
             get
             {
                 return _denominator;
-            }
-            set
-            {
-                _denominator = value;
             }
         }
 
@@ -40,10 +36,6 @@ namespace Numerics
             get
             {
                 return _numerator;
-            }
-            set
-            {
-                _numerator = value;
             }
         }
 
